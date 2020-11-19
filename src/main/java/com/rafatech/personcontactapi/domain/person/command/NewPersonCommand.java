@@ -14,7 +14,7 @@ public class NewPersonCommand {
     @NotBlank(message = PERSON_NAME_REQUIRED)
     private final String name;
 
-    @CPF(message = PERSON_CPF_VALID)
+    @CPF(message = PERSON_CPF_INVALID)
     private final String cpf;
 
     @NotNull(message = PERSON_BIRTH_DATE_REQUIRED)

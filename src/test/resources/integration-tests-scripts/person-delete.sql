@@ -1,0 +1,5 @@
+DELETE FROM PERSON
+WHERE ID IN (
+    '2c954301-38ee-4d79-aff7-58131efd6dc9',
+    'd1f1b697-cc6a-4eca-984d-89cc3e535f20'
+);

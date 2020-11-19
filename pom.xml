@@ -17,6 +17,7 @@
 	<properties>
 		<java.version>11</java.version>
 		<querydsl.version>4.4.0</querydsl.version>
+		<test-container.version>1.15.0</test-container.version>
 	</properties>
 
 	<dependencies>
@@ -58,6 +59,17 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>${test-container.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.rest-assured</groupId>
+			<artifactId>rest-assured</artifactId>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

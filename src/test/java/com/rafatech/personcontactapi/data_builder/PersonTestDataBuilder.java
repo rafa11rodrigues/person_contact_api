@@ -1,5 +1,6 @@
 package com.rafatech.personcontactapi.data_builder;
 
+import com.rafatech.personcontactapi.domain.person.Person;
 import com.rafatech.personcontactapi.domain.person.command.NewPersonCommand;
 
 import java.time.LocalDate;
@@ -15,4 +16,7 @@ public class PersonTestDataBuilder {
         return new NewPersonCommand(NAME, CPF, BIRTH_DATE);
     }
 
+    public static Person person() {
+        return Person.of(newPersonCommand());
+    }
 }
