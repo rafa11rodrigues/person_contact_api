@@ -6,9 +6,7 @@ import com.rafatech.personcontactapi.infrastructure.domain.EntityBase;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Entity
@@ -54,6 +52,11 @@ public class Person extends EntityBase {
         this.contacts.remove(contact);
     }
 
+    public Optional<Contact> getContact(UUID contactId) {
+        return contacts.stream()
+                .filter(contact -> contact.getId().equals(contactId))
+                .findFirst();
+    }
 
     public String getName() {
         return name;
