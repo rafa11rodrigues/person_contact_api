@@ -2,7 +2,7 @@ package com.rafatech.personcontactapi.port.rest.request;
 
 import com.rafatech.personcontactapi.domain.person.command.CreateOrUpdateContactData;
 
-public class ContactRequest {
+public class ContactRequestBody {
 
     private String name;
 
@@ -10,7 +10,7 @@ public class ContactRequest {
 
     private String email;
 
-    protected ContactRequest() {}
+    protected ContactRequestBody() {}
 
 
     public CreateOrUpdateContactData toCreateOrUpdateContactData() {

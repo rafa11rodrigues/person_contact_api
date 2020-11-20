@@ -23,7 +23,7 @@ public class Person extends EntityBase {
     private LocalDate birthDate;
 
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
-    @OrderBy("name")
+    @OrderBy("name ASC")
     private Set<Contact> contacts = new HashSet<>();
 
 
@@ -71,7 +71,7 @@ public class Person extends EntityBase {
     }
 
     public Set<Contact> getContacts() {
-        return contacts;
+        return Set.copyOf(contacts);
     }
 
     @Override

@@ -1,12 +1,10 @@
 package com.rafatech.personcontactapi.port.rest.resource;
 
-import com.rafatech.personcontactapi.domain.person.Contact;
 import com.rafatech.personcontactapi.domain.person.command.*;
 import com.rafatech.personcontactapi.domain.person.filter.PersonFilter;
 import com.rafatech.personcontactapi.domain.person.service.PersonCRUDService;
-import com.rafatech.personcontactapi.port.rest.request.ContactRequest;
-import com.rafatech.personcontactapi.port.rest.request.PersonRequest;
-import com.rafatech.personcontactapi.port.rest.response.ContactResponse;
+import com.rafatech.personcontactapi.port.rest.request.ContactRequestBody;
+import com.rafatech.personcontactapi.port.rest.request.PersonRequestBody;
 import com.rafatech.personcontactapi.port.rest.response.PersonResponse;
 import com.rafatech.personcontactapi.port.rest.response.PersonSimpleResponse;
 import org.springframework.data.domain.Page;
@@ -50,10 +48,10 @@ public class PersonResource {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public PersonResponse create(@RequestBody PersonRequest request) {
-        var personData = request.toCreateOrUpdateCommandData();
-        var contactData = request.getContacts().stream()
-                .map(ContactRequest::toCreateOrUpdateContactData)
+    public PersonResponse create(@RequestBody PersonRequestBody body) {
+        var personData = body.toCreateOrUpdateCommandData();
+        var contactData = body.getContacts().stream()
+                .map(ContactRequestBody::toCreateOrUpdateContactData)
                 .collect(Collectors.toSet());
         var command = new CreatePersonCommand(personData, contactData);
         var createdPerson = personCRUDService.create(command);
@@ -67,8 +65,8 @@ public class PersonResource {
     }
 
     @PutMapping("/{id}")
-    public PersonResponse update(@PathVariable UUID id, @RequestBody PersonRequest request) {
-        var command = new UpdatePersonCommand(id, request.toCreateOrUpdateCommandData());
+    public PersonResponse update(@PathVariable UUID id, @RequestBody PersonRequestBody body) {
+        var command = new UpdatePersonCommand(id, body.toCreateOrUpdateCommandData());
         var person = personCRUDService.update(command);
         return new PersonResponse(person);
     }
@@ -80,8 +78,8 @@ public class PersonResource {
     }
 
     @PostMapping("/{personId}/contacts")
-    public PersonResponse addContact(@PathVariable UUID personId, @RequestBody ContactRequest request) {
-        var command = new AddContactCommand(personId, request.toCreateOrUpdateContactData());
+    public PersonResponse addContact(@PathVariable UUID personId, @RequestBody ContactRequestBody body) {
+        var command = new AddContactCommand(personId, body.toCreateOrUpdateContactData());
         var person = personCRUDService.addContact(command);
         return new PersonResponse(person);
     }

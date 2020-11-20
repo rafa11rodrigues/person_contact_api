@@ -3,6 +3,7 @@ package com.rafatech.personcontactapi.domain.person.service;
 import com.rafatech.personcontactapi.domain.person.Contact;
 import com.rafatech.personcontactapi.domain.person.Person;
 import com.rafatech.personcontactapi.domain.person.command.*;
+import com.rafatech.personcontactapi.domain.person.repository.ContactRepository;
 import com.rafatech.personcontactapi.domain.person.repository.PersonRepository;
 import com.rafatech.personcontactapi.infrastructure.exception.BusinessException;
 import com.rafatech.personcontactapi.infrastructure.exception.NotFoundException;
@@ -12,8 +13,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
-import java.util.UUID;
-
 import static com.rafatech.personcontactapi.infrastructure.exception.ExceptionMessagesDictionary.*;
 
 @Service
@@ -22,8 +21,11 @@ public class PersonCRUDService {
 
     private final PersonRepository personRepository;
 
-    public PersonCRUDService(PersonRepository personRepository) {
+    private final ContactRepository contactRepository;
+
+    public PersonCRUDService(PersonRepository personRepository, ContactRepository contactRepository) {
         this.personRepository = personRepository;
+        this.contactRepository = contactRepository;
     }
 
 
@@ -74,6 +76,10 @@ public class PersonCRUDService {
                         command.getContactId(),
                         command.getPersonId()));
         person.removeContact(contact);
+        if (person.getContacts().isEmpty()) {
+            throw new BusinessException(PERSON_CONTACTS_NOT_EMPTY);
+        }
+        contactRepository.delete(contact);
         personRepository.save(person);
     }
 }

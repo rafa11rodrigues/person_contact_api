@@ -4,10 +4,10 @@ import com.rafatech.personcontactapi.domain.person.command.CreateOrUpdatePersonD
 
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
-public class PersonRequest {
+public class PersonRequestBody {
 
     private String name;
 
@@ -15,9 +15,9 @@ public class PersonRequest {
 
     private LocalDate birthDate;
 
-    private Set<ContactRequest> contacts = new HashSet<>();
+    private Set<ContactRequestBody> contacts;
 
-    protected PersonRequest() {}
+    protected PersonRequestBody() {}
 
 
     public CreateOrUpdatePersonData toCreateOrUpdateCommandData() {
@@ -37,7 +37,7 @@ public class PersonRequest {
         return birthDate;
     }
 
-    public Set<ContactRequest> getContacts() {
-        return contacts;
+    public Set<ContactRequestBody> getContacts() {
+        return Objects.nonNull(contacts) ? contacts : new HashSet<>();
     }
 }

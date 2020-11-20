@@ -1,7 +1,6 @@
 package com.rafatech.personcontactapi.port.rest.response;
 
 import com.rafatech.personcontactapi.domain.person.Person;
-import com.rafatech.personcontactapi.port.rest.request.PersonRequest;
 
 import java.time.LocalDate;
 import java.util.Set;
