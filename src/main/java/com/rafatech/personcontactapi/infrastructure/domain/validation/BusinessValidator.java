@@ -1,4 +1,4 @@
-package com.rafatech.personcontactapi.infrastructure.domain;
+package com.rafatech.personcontactapi.infrastructure.domain.validation;
 
 import com.rafatech.personcontactapi.infrastructure.exception.ConstraintViolationListException;
 

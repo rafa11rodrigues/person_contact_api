@@ -11,12 +11,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
@@ -51,23 +48,23 @@ class PersonCRUDServiceTest {
 
     @Test
     void create_duplicatedCPF_throwException() {
-        var command = PersonTestDataBuilder.newPersonCommand();
+        var command = PersonTestDataBuilder.createPersonCommand();
         var personCaptor = ArgumentCaptor.forClass(Person.class);
         when(personRepository.saveAndFlush(personCaptor.capture()))
                 .thenThrow(new DataIntegrityViolationException(""));
 
         var exception = assertThrows(BusinessException.class,
                 () -> personCRUDService.create(command));
-        assertEquals(String.format("CPF '%s' already assigned to a person", command.getCpf())
+        assertEquals(String.format("CPF '%s' already assigned to a person", command.getPersonData().getCpf())
                 , exception.getMessage());
         var capturedPerson = personCaptor.getValue();
         verify(personRepository).saveAndFlush(capturedPerson);
-        assertEquals(command.getName(), capturedPerson.getName());
+        assertEquals(command.getPersonData().getName(), capturedPerson.getName());
     }
 
     @Test
     void create_everythingOk_createAndSavePerson() {
-        var command = PersonTestDataBuilder.newPersonCommand();
+        var command = PersonTestDataBuilder.createPersonCommand();
         var personCaptor = ArgumentCaptor.forClass(Person.class);
         var person = PersonTestDataBuilder.person();
         when(personRepository.saveAndFlush(personCaptor.capture()))
@@ -77,6 +74,6 @@ class PersonCRUDServiceTest {
         var capturedPerson = personCaptor.getValue();
         verify(personRepository).saveAndFlush(capturedPerson);
         assertEquals(person, returnedPerson);
-        assertEquals(command.getName(), capturedPerson.getName());
+        assertEquals(command.getPersonData().getName(), capturedPerson.getName());
     }
 }

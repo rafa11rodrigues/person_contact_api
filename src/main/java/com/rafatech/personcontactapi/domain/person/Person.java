@@ -1,14 +1,15 @@
 package com.rafatech.personcontactapi.domain.person;
 
-import com.rafatech.personcontactapi.domain.person.command.NewPersonCommand;
+import com.rafatech.personcontactapi.domain.person.command.CreateOrUpdatePersonData;
+import com.rafatech.personcontactapi.domain.person.command.CreatePersonCommand;
 import com.rafatech.personcontactapi.infrastructure.domain.EntityBase;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.validation.Valid;
+import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "person")
@@ -23,15 +24,34 @@ public class Person extends EntityBase {
     @Column(name = "birth_date", nullable = false)
     private LocalDate birthDate;
 
+    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
+    @OrderBy("name")
+    private Set<Contact> contacts = new HashSet<>();
+
 
     protected Person() {}
 
-    public static Person of(NewPersonCommand command) {
+    public static Person of(CreatePersonCommand command) {
         var person = new Person();
-        person.name = command.getName();
-        person.cpf = command.getCpf();
-        person.birthDate = command.getBirthDate();
+        person.update(command.getPersonData());
+        command.getContactData().stream()
+                .map(contactData -> Contact.of(contactData, person))
+                .forEach(person::addContact);
         return person;
+    }
+
+    public void update(CreateOrUpdatePersonData data) {
+        this.name = data.getName();
+        this.cpf = data.getCpf();
+        this.birthDate = data.getBirthDate();
+    }
+
+    public void addContact(Contact contact) {
+        this.contacts.add(contact);
+    }
+
+    public void removeContact(Contact contact) {
+        this.contacts.remove(contact);
     }
 
 
@@ -47,6 +67,9 @@ public class Person extends EntityBase {
         return birthDate;
     }
 
+    public Set<Contact> getContacts() {
+        return contacts;
+    }
 
     @Override
     public boolean equals(Object o) {

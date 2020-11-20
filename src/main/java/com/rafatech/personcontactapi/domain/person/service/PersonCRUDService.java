@@ -1,8 +1,9 @@
 package com.rafatech.personcontactapi.domain.person.service;
 
 import com.rafatech.personcontactapi.domain.person.Person;
+import com.rafatech.personcontactapi.domain.person.command.CreatePersonCommand;
 import com.rafatech.personcontactapi.domain.person.command.FilterPersonCommand;
-import com.rafatech.personcontactapi.domain.person.command.NewPersonCommand;
+import com.rafatech.personcontactapi.domain.person.command.CreateOrUpdatePersonData;
 import com.rafatech.personcontactapi.domain.person.repository.PersonRepository;
 import com.rafatech.personcontactapi.infrastructure.exception.BusinessException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -28,12 +29,12 @@ public class PersonCRUDService {
         return personRepository.findAll(command.getFilter(), command.getPageable());
     }
 
-    public Person create(NewPersonCommand command) {
+    public Person create(CreatePersonCommand command) {
         var person = Person.of(command);
         try{
             return personRepository.saveAndFlush(person);
         } catch (DataIntegrityViolationException ex) {
-            throw new BusinessException(PERSON_CPF_ALREADY_EXISTS, command.getCpf());
+            throw new BusinessException(PERSON_CPF_ALREADY_EXISTS, command.getPersonData().getCpf());
         }
     }
 }
